@@ -1,0 +1,2 @@
+class SistemasController < ApplicationController
+end

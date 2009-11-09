@@ -1,0 +1,2 @@
+class DiferenciacionController < ApplicationController
+end

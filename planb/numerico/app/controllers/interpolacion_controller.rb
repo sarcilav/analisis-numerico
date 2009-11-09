@@ -1,0 +1,2 @@
+class InterpolacionController < ApplicationController
+end

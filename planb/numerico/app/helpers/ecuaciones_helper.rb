@@ -1,0 +1,2 @@
+module EcuacionesHelper
+end
