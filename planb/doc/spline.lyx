@@ -555,11 +555,66 @@ f(x_{i})\end{array}\right]$
 \begin_inset Formula $n$
 \end_inset
 
- puntos
+ puntos.
+\end_layout
+
+\begin_layout Standard
+De donde se puede obtener cada uno de los 
+\begin_inset Formula $P_{i}(x)$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection*
 Cuadráticos
+\end_layout
+
+\begin_layout Standard
+Un spline cuadrático es aquel que se aproxima a la función tramo por tramo,
+ mediante ecuaciones de la forma 
+\begin_inset Formula $P(x)=ax^{2}+bx+c$
+\end_inset
+
+, esta es la razón por la que se llaman cuadráticos pues son polinomios
+ de grado 2.
+\end_layout
+
+\begin_layout Standard
+Como en la interpolación segmentaria lineal, vamos a tener N-1 ecuaciones
+ (donde N son los puntos sobre los que se define la función).
+ La interpolación cuadrática nos va a asegurar que la función que nosotros
+ generemos a trozos con los distintos P(x) va a ser contínua, ya que para
+ sacar las condiciones que ajusten el polinomio, vamos a determinar como
+ condiciones:
+\end_layout
+
+\begin_layout Standard
+* Que las partes de la función a trozos P(x) pasen por ese punto.
+ Es decir, que las dos Pn(x) que rodean al f(x) que queremos aproximar,
+ sean igual a f(x) en cada uno de estos puntos.
+\end_layout
+
+\begin_layout Standard
+* Que la derivada en un punto siempre coincida para ambos "lados" de la
+ función definida a trozos que pasa por tal punto común.
+\end_layout
+
+\begin_layout Standard
+Esto sin embargo no es suficiente, y necesitamos una condición más.
+ ¿Por qué?.
+ Tenemos 3 incógnitas por cada P(x).
+ En un caso sencillo con f(x) definida en tres puntos y dos ecuaciones P(x)
+ para aproximarla, vamos a tener seis incógnitas en total.
+ Para resolver esto necesitaríamos seis ecuaciones, pero vamos a tener tan
+ sólo cinco: cuatro que igualan el P(x) con el valor de f(x) en ese punto
+ (dos por cada intervalo), y la quinta al igualar la derivada en el punto
+ común a las dos P(x).
+\end_layout
+
+\begin_layout Standard
+Se necesita una sexta ecuación,¿de dónde se extrae? Esto suele hacerse con
+ el valor de la derivada en algún punto, al que se fuerza uno de los P(x).
 \end_layout
 
 \begin_layout Subsection*

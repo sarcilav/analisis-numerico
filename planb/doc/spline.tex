@@ -1,0 +1,206 @@
+%% LyX 1.6.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx}
+
+\usepackage{babel}
+
+\begin{document}
+
+\part*{Splines}
+
+
+\section*{¿Que es un spline?}
+
+Para el análisis numérico un spline es la forma mediante la cual se
+puede definir una curva, mediante porciones de esta definidas por
+polinomios.
+
+Los splines hacen referencia a una amplia clase de funciones que son
+utilizadas en aplicaciones que requieren la interpolación de datos,
+y/o un alisado en la interpolación. Los splines son utilizados para
+la interpolación y/o alisado de datos de una o varias dimensiones.
+Las funciones para la interpolación por splines normalmente se determinan
+como minimizadores de los cambios bruscos en las nubes de puntos.
+Y además se clasifican según su capacidad de alisar las nubes de puntos.
+
+
+\section*{¿ Para que se usa?}
+
+Para el ajuste de curvas, los splines se utilizan para aproximar formas
+complicadas. La simplicidad de la representación y la facilidad de
+cómputo de los splines los hacen populares para la representación
+de curvas en informática, particularmente en el terreno de los gráficos
+por ordenador.
+
+Además son una muy buena forma de conseguir aproximaciones computacionales
+de objetos de la realidad, por ejemplo representar formas complejas
+como el cuero vaca, el cuerpo humano, y en general cualquier forma
+no trivial de representar mediante la composición de poliedros, polígonos,
+esferas y/o circulos. Y es por esto que herramientas de CAD/CAM que
+utilizan modelado, como rhinoceros, solidworks, pro e y entre otros,
+hacen uso de estos para representar las complejas formas introducidas
+por los diseñadores, puesto que para la máquina solo existen elementos
+discretos, mientras que para ellos (diseñadores) existen las formas
+llenas de curvas suaves, por lo que podemos decir que es una de las
+formas mediante las cuales la computación gráfica a logrado solventar
+el eterno dilema de lo análogo vs lo digital.
+
+También es importante resaltar que los usos de los splines no solo
+se ve delimitado por la computación gráfica sino que también son usados
+en problemas de optimización en economía, en sistemas de corte y en
+general en cualquier sistema de ajuste de curvas. Puesto que las curvas
+son una serie infinita de puntos no numerable y que tan solo nos interese
+conocer las propiedades el compartimiento general de este conjunto.
+
+
+\section*{Problema y solución que brindan los splines}
+
+En la vida real cuando intentamos realizar abtracciones de la realidad,
+tenemos que la reliadad es infinita en inmesurable y por lo tanto
+nuestros modelos son tan solo una pequeña muestra de esta, y es por
+eso que presisamos un medio para poder representarla de la mejor manera,
+por ejemplo en los ambientes que es necesario el reconocimiento de
+patrones, para estos dispositivos es imposible captar toda la realidad
+por lo que solo deben ser capaces de escojer los puntos mas significativos
+
+
+\section*{Splines clásicos o trazadores}
+
+Los splines son también llamados trazadores puesto que su utilidad
+es: dada una serie de puntos, retornar el conjunto de polinomios que
+punto a punto me generan una curva suave que pasa por cada uno de
+estos. Por lo cual se pueden a semejar a aquellos juegos clásicos
+que dado una nube de puntos ordenados, se busca generar la figura
+escondida dentro de esta nube. 
+
+
+\subsection*{Lineales}
+
+Esta la forma mas simple. Para estos casos lo que se busca es interpolar
+una función $f(x)$, con solo $N$ pares ordenados de la forma $(x,f(x))$,
+por los que debe pasar el trazador que obtengamos. Y como bien el
+nombre nos lo indica cada $P_i(x)$ va hacer de la forma $ax+b$.
+
+Ahora bien definiremos por cada par de puntos consecutivos en el orden
+que nos entregaron un $P_i(x)$, para un total de $N-1$ segmentos
+de recta, haciendo pasar cada una de estas por los puntos que las
+definen, por lo tanto, la función $P(x)$ será una función por partes
+definida por el conjunto de los $P_i$; es por ello que nuestra función
+será continua en dichos puntos, pero no derivable en general, por
+lo que no sera una curva suave, es decir que cumplimos solo con la
+parte de más trivial de los splines, nos queda por averiguar como
+es que funcionan los splines que suavizan la conexión entre los diferentes
+puntos.
+
+Ejemplo : Dado los siguientes pares ordenados halle el spline.
+
+$f(1) = 2$\inputencoding{latin1}{,}\inputencoding{latin9}$f(3) = 1$,
+$f(4) = 3$
+
+Ahora bien tenemos 3 puntos por lo tanto necesitamos calcular las
+2 ecuaciones de rectas que me unen estos tres puntos.
+
+Tenemos que:
+
+$P_1(x) = ax + b$
+
+\textrightarrow{}$P_1(1) = 2 = a+b$ y $P_1(3) = 1 = 3a +b$ 
+
+\textrightarrow{}$a = -$${1}\over{2}$ y $b = $$5\over2$
+
+\textrightarrow{}$P_1(x) = $${5 - x}\over{2}$ 
+
+\includegraphics[scale=0.7]{img/spline_simple_1}
+
+Ahora bien esta es la gráfica para $P_1(x)$, pero ahora necesitamos
+calcular la siguiente trama. Para la cual tenemos:
+
+$P_2(x) = ax + b$
+
+\textrightarrow{}$P_2(3) = 1 = 3a+b$ y $P_2(4) = 3 = 4a +b$ 
+
+\textrightarrow{}$a = 2$ y $b = -5$
+
+\textrightarrow{}$P_2(x) = 2x - 5$ 
+
+\includegraphics[scale=0.7]{img/spline_simple_2}
+
+
+\subsubsection*{Generalización}
+
+Para cada par de puntos adyancentes hay que resolver el siguiente
+sistema matricial:
+
+$\left[\begin{array}{cc}
+x_{i-1} & 1\\
+x_{i} & 1\end{array}\right]\left[\begin{array}{c}
+a\\
+b\end{array}\right]$$=$$\left[\begin{array}{c}
+f(x_{i-1})\\
+f(x_{i})\end{array}\right]$ donde $i\in\left[1,n-1\right]$ que son los $n-1$ polinomios y $\left[0,n-1\right]$
+que son los $n$ puntos.
+
+De donde se puede obtener cada uno de los $P_{i}(x)$.
+
+
+\subsection*{Cuadráticos}
+
+Un spline cuadrático es aquel que se aproxima a la función tramo por
+tramo, mediante ecuaciones de la forma $P(x)=ax^{2}+bx+c$, esta es
+la razón por la que se llaman cuadráticos pues son polinomios de grado
+2.
+
+Como en la interpolación segmentaria lineal, vamos a tener N-1 ecuaciones
+(donde N son los puntos sobre los que se define la función). La interpolación
+cuadrática nos va a asegurar que la función que nosotros generemos
+a trozos con los distintos P(x) va a ser contínua, ya que para sacar
+las condiciones que ajusten el polinomio, vamos a determinar como
+condiciones:
+
+{*} Que las partes de la función a trozos P(x) pasen por ese punto.
+Es decir, que las dos Pn(x) que rodean al f(x) que queremos aproximar,
+sean igual a f(x) en cada uno de estos puntos.
+
+{*} Que la derivada en un punto siempre coincida para ambos \textquotedbl{}lados\textquotedbl{}
+de la función definida a trozos que pasa por tal punto común.
+
+Esto sin embargo no es suficiente, y necesitamos una condición más.
+¿Por qué?. Tenemos 3 incógnitas por cada P(x). En un caso sencillo
+con f(x) definida en tres puntos y dos ecuaciones P(x) para aproximarla,
+vamos a tener seis incógnitas en total. Para resolver esto necesitaríamos
+seis ecuaciones, pero vamos a tener tan sólo cinco: cuatro que igualan
+el P(x) con el valor de f(x) en ese punto (dos por cada intervalo),
+y la quinta al igualar la derivada en el punto común a las dos P(x).
+
+Se necesita una sexta ecuación,¿de dónde se extrae? Esto suele hacerse
+con el valor de la derivada en algún punto, al que se fuerza uno de
+los P(x).
+
+
+\subsection*{Cúbicos}
+
+
+\section*{Splines para curvas cerradas}
+
+
+\subsubsection*{B-spline}
+
+
+\subsection*{Naturales}
+
+
+\section*{Conclusiones y selección del método}
+
+
+\section*{Seudocódigo}
+
+
+\section*{Análisis de complejidad}
+
+
+\section*{Implementación }
+\end{document}
