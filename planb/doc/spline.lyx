@@ -800,12 +800,126 @@ Obviamente las curvas que se muestran anteriormente se calculan con valores
  era para mostrar como se va construye la gráfica paso a paso.
 \end_layout
 
+\begin_layout Standard
+Ahora bien tranquilamente podemos hacer un spline cerrado si agregamos un
+ elemento más a la lista de puntos de control 
+\begin_inset Formula $P_{n}=P_{0}$
+\end_inset
+
+ mejor dicho que los dos puntos de anclaje sean el mismo.
+\end_layout
+
 \begin_layout Subsection*
 Naturales
 \end_layout
 
+\begin_layout Standard
+Son un caso muy particular de los splines cúbicos, puesto que la forma más
+ típica, consiste en hacer la seguna derivada de 
+\begin_inset Formula $P$
+\end_inset
+
+ igual a cero para el primer y último punto sobre el que está definido el
+ conjunto de Splines, pero como el primer y ultimo punto son iguales, entonces
+ lo que se hace para manejar esta situación es construir el spline superior
+ y luego el spline inferior.
+ Y simplemente garantizar la condición en la segunda derivada igual cero
+ en el primer punto en el 
+\begin_inset Formula $n/2$
+\end_inset
+
+ por nombrar el de alguna manera al que se encuentra en la zona de frontera
+ entre las particiones de los splines, y luego nuevamente garantizar que
+ el spline 
+\begin_inset Formula $n$
+\end_inset
+
+ que se encuentra en la parte inferior sea igual a cero es decir que las
+ segundas derivadas se comporten igual para la parte de abajo y de arriba.
+\end_layout
+
+\begin_layout Standard
+La forma de usar splines cúbicos ya la vimos, por lo tanto por ahora dejaremos
+ los splines naturales hasta aquí.
+\end_layout
+
 \begin_layout Section*
 Conclusiones y selección del método
+\end_layout
+
+\begin_layout Standard
+De los dos métodos ilustrados para lograr generar splines de curvas cerradas,
+ hemos escogido el de spline natural por varias razones y muchas de ellas
+ son el descarte.
+\end_layout
+
+\begin_layout Enumerate
+Números inmanejables: Los números generados por b-splines son dependientes
+ del número de puntos, por lo tanto si tenemos alrededor de 100 puntos sería
+ manejar flotantes con precisiones del orden de 
+\begin_inset Formula $10^{-100}$
+\end_inset
+
+ porque los valores de 
+\begin_inset Formula $t$
+\end_inset
+
+ que son números entre 0 y 1 serían elevados por valores de 0 a 100, por
+ lo tanto son valores inmanejables por la aritmetica estandar de un computador.
+\end_layout
+
+\begin_layout Enumerate
+Coeficientes binomiales: Támbien utilizados en los b-splines son números
+ que después de 
+\begin_inset Formula $\binom{100}{i},i\in\left[0,100\right]$
+\end_inset
+
+, son más grandes que 
+\begin_inset Formula $10^{100}$
+\end_inset
+
+ lo que equivale a 
+\begin_inset Formula $7.352941176470588*10^{89}$
+\end_inset
+
+ veces la edad del universo (trece mil seiscientos millones de años) aproximadam
+ente.
+ 
+\end_layout
+
+\begin_layout Standard
+La complejidad de los b-splines es relativamente simple es 
+\begin_inset Formula $O(n)$
+\end_inset
+
+ si las operaciones intermedías fueran faciles y manejables por los números
+ máquinas sería la solución a escoger, pero aun así decidimos escojer los
+ splines naturales, que aunque se reducen a manejar matrices de tamaños
+ muy grandes son matrices esparcidas que se pueden reducir a una configuración
+ muy favorable, que permita atacar el problema en 
+\begin_inset Formula $O(n)$
+\end_inset
+
+ y con números manejables por la aritmética del computador.
+\end_layout
+
+\begin_layout Standard
+Ahora bien podemos concluir que en el campo del análisis númerico, un spline
+ es una función especial definida por partes y cada una de esas partes por
+ polinomios.
+ Que a su vez lo podemos ver como una forma para manejar los problemas de
+ interpolación.
+\end_layout
+
+\begin_layout Standard
+En la sub-campos de la informática de diseño asistido por ordenador y gráficos
+ por ordenador, el término "spline" con más frecuencia se refiere a un polinomio
+ a trozos (paramétrica) curva.
+ Splines son populares en las curvas de estos subcampos debido a la simplicidad
+ de su construcción, su facilidad y precisión de la evaluación, y su capacidad
+ a la aproximación de formas complejas a través de la curva de ajuste de
+ curvas y el diseño interactivo.
+ 
 \end_layout
 
 \begin_layout Section*
