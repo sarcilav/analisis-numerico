@@ -510,7 +510,52 @@ Generalización
 \end_layout
 
 \begin_layout Standard
+Para cada par de puntos adyancentes hay que resolver el siguiente sistema
+ matricial:
+\end_layout
 
+\begin_layout Standard
+\begin_inset Formula $\left[\begin{array}{cc}
+x_{i-1} & 1\\
+x_{i} & 1\end{array}\right]\left[\begin{array}{c}
+a\\
+b\end{array}\right]$
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$=$
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $\left[\begin{array}{c}
+f(x_{i-1})\\
+f(x_{i})\end{array}\right]$
+\end_inset
+
+ donde 
+\begin_inset Formula $i\in\left[1,n-1\right]$
+\end_inset
+
+ que son los 
+\begin_inset Formula $n-1$
+\end_inset
+
+ polinomios y 
+\begin_inset Formula $\left[0,n-1\right]$
+\end_inset
+
+ que son los 
+\begin_inset Formula $n$
+\end_inset
+
+ puntos
 \end_layout
 
 \begin_layout Subsection*
