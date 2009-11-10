@@ -588,16 +588,338 @@ Cúbicos
 Splines para curvas cerradas
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Standard
+A simple impresión los spline cerrados, son tan solo un caso particular
+ de los anteriormente mencionados, pero muchos de los algoritmos y/o métodos
+ que se utilizan en los splines simples, no se pueden aplicar en los splines
+ de este tipo, puesto que un spline cerrado consiste que el primer y ultimo
+ punto coinciden, lo que genera un problema pues casi todos los métodos
+ mencionados de splines se basan en que el primer y ultimo punto son difenrentes
+ para poder obtener un sistema que no sea linealmente dependiente.
+ Por eso es que vale la pena resaltar este caso particular.
+\end_layout
+
+\begin_layout Subsection*
 B-spline
+\end_layout
+
+\begin_layout Standard
+Los b-spline a diferencia de los spline no son trazadores puesto que no
+ es necesario que pasen por todos los puntos que lo definen, sino que puede
+ usar cada uno de esos puntos como un punto de control en vez como un punto
+ de una función, por lo cual son curvas mucho más suavez (por ejemplo las
+ curvas de Bezier).
+\end_layout
+
+\begin_layout Standard
+Ahora bien los b-splines se pueden interpretar como splines parametricos
+ que se redefinen a partir de un parametro 
+\begin_inset Formula $t\in[0,1]$
+\end_inset
+
+, expresado como combinaciones lineales de los puntos de control, razón
+ de que uno de los teoremas fundamentales en este campo exprese: que dada
+ una función spline de un grado determinado (ejemplos: lineal,cuadrático,
+ cúbico ...), suavidad, y distribución de los puntos, se puede representar
+ como una combinación lineal de b-splines del mismo grado y suavidad, y
+ sobre la misma distribución de los puntos.
+ Es decir que para un b-spline existen puntos de anclaje (
+\begin_inset Formula $P_{0},P_{n-1}$
+\end_inset
+
+) y puntos de control (
+\begin_inset Formula $P_{1},P_{2},\cdots,P_{n-2}$
+\end_inset
+
+), y el parametro 
+\begin_inset Formula $t$
+\end_inset
+
+ que indica que el punto que se calcula con ese 
+\begin_inset Formula $t$
+\end_inset
+
+ esta al 
+\begin_inset Formula $t*100\%$
+\end_inset
+
+ del punto inicial.
+\end_layout
+
+\begin_layout Standard
+Ahora bien utilizaremos el mismo ejemplo de todo el documento para explicar
+ como se utiliza un b-spline, haciendo uso del caso particular de las curvas
+ de Bezier.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B(t)=\sum_{i=0}^{n}\binom{n}{i}P_{i}\left(1-t\right)^{n-i}t^{i}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Y para nuestro caso particular de 3 puntos tenemos.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B(t)=\sum_{i=0}^{2}\binom{2}{i}P_{i}\left(1-t\right)^{2-i}t^{i}=\left(1-t\right)^{2}P_{0}+2t\left(1-t\right)P_{1}+t^{2}P_{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Con 
+\begin_inset Formula $P_{0}=\left(1,2\right),P_{1}=\left(3,1\right),P_{2}=\left(4,3\right)$
+\end_inset
+
+ y para poder visualizar como se comporta el b-spline a medida que avanza
+ el 
+\begin_inset Formula $t$
+\end_inset
+
+ tomaremos 
+\begin_inset Formula $t_{i}=\left\{ 0.2,0.4,0.5,0.6,0.8,1\right\} $
+\end_inset
+
+, para cada intervalo se presentara en la gráfica con un color diferente.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_1.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=0.2\Rightarrow B(0.2)=\left(1-0.2\right)^{2}P_{0}+2*0.2\left(1-0.2\right)P_{1}+0.2^{2}P_{2}=\left(1.760;1.720\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_2.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=0.4\Rightarrow B(0.4)=\left(1-0.4\right)^{2}P_{0}+2*0.4\left(1-0.4\right)P_{1}+0.4^{2}P_{2}=\left(2.439;1.680\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_3.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=0.6\Rightarrow B(0.6)=\left(1-0.6\right)^{2}P_{0}+2*0.6\left(1-0.6\right)P_{1}+0.6^{2}P_{2}=\left(3.039;1.880\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_4.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=0.8\Rightarrow B(0.8)=\left(1-0.8\right)^{2}P_{0}+2*0.8\left(1-0.8\right)P_{1}+0.8^{2}P_{2}=\left(3.559;2.319\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_5.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=1\Rightarrow B(1)=\left(1-1\right)^{2}P_{0}+2*1\left(1-1\right)P_{1}+1^{2}P_{2}=\left(4,3\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Obviamente las curvas que se muestran anteriormente se calculan con valores
+ de 
+\begin_inset Formula $t$
+\end_inset
+
+ muchos más pequeños para dar la sensación de continuidad, los valores de
+ 
+\begin_inset Formula $t$
+\end_inset
+
+ era para mostrar como se va construye la gráfica paso a paso.
+\end_layout
+
+\begin_layout Standard
+Ahora bien tranquilamente podemos hacer un spline cerrado si agregamos un
+ elemento más a la lista de puntos de control 
+\begin_inset Formula $P_{n}=P_{0}$
+\end_inset
+
+ mejor dicho que los dos puntos de anclaje sean el mismo.
 \end_layout
 
 \begin_layout Subsection*
 Naturales
 \end_layout
 
+\begin_layout Standard
+Son un caso muy particular de los splines cúbicos, puesto que la forma más
+ típica, consiste en hacer la seguna derivada de 
+\begin_inset Formula $P$
+\end_inset
+
+ igual a cero para el primer y último punto sobre el que está definido el
+ conjunto de Splines, pero como el primer y ultimo punto son iguales, entonces
+ lo que se hace para manejar esta situación es construir el spline superior
+ y luego el spline inferior.
+ Y simplemente garantizar la condición en la segunda derivada igual cero
+ en el primer punto en el 
+\begin_inset Formula $n/2$
+\end_inset
+
+ por nombrar el de alguna manera al que se encuentra en la zona de frontera
+ entre las particiones de los splines, y luego nuevamente garantizar que
+ el spline 
+\begin_inset Formula $n$
+\end_inset
+
+ que se encuentra en la parte inferior sea igual a cero es decir que las
+ segundas derivadas se comporten igual para la parte de abajo y de arriba.
+\end_layout
+
+\begin_layout Standard
+La forma de usar splines cúbicos ya la vimos, por lo tanto por ahora dejaremos
+ los splines naturales hasta aquí.
+\end_layout
+
 \begin_layout Section*
 Conclusiones y selección del método
+\end_layout
+
+\begin_layout Standard
+De los dos métodos ilustrados para lograr generar splines de curvas cerradas,
+ hemos escogido el de spline natural por varias razones y muchas de ellas
+ son el descarte.
+\end_layout
+
+\begin_layout Enumerate
+Números inmanejables: Los números generados por b-splines son dependientes
+ del número de puntos, por lo tanto si tenemos alrededor de 100 puntos sería
+ manejar flotantes con precisiones del orden de 
+\begin_inset Formula $10^{-100}$
+\end_inset
+
+ porque los valores de 
+\begin_inset Formula $t$
+\end_inset
+
+ que son números entre 0 y 1 serían elevados por valores de 0 a 100, por
+ lo tanto son valores inmanejables por la aritmetica estandar de un computador.
+\end_layout
+
+\begin_layout Enumerate
+Coeficientes binomiales: Támbien utilizados en los b-splines son números
+ que después de 
+\begin_inset Formula $\binom{100}{i},i\in\left[0,100\right]$
+\end_inset
+
+, son más grandes que 
+\begin_inset Formula $10^{100}$
+\end_inset
+
+ lo que equivale a 
+\begin_inset Formula $7.352941176470588*10^{89}$
+\end_inset
+
+ veces la edad del universo (trece mil seiscientos millones de años) aproximadam
+ente.
+ 
+\end_layout
+
+\begin_layout Standard
+La complejidad de los b-splines es relativamente simple es 
+\begin_inset Formula $O(n)$
+\end_inset
+
+ si las operaciones intermedías fueran faciles y manejables por los números
+ máquinas sería la solución a escoger, pero aun así decidimos escojer los
+ splines naturales, que aunque se reducen a manejar matrices de tamaños
+ muy grandes son matrices esparcidas que se pueden reducir a una configuración
+ muy favorable, que permita atacar el problema en 
+\begin_inset Formula $O(n)$
+\end_inset
+
+ y con números manejables por la aritmética del computador.
+\end_layout
+
+\begin_layout Standard
+Ahora bien podemos concluir que en el campo del análisis númerico, un spline
+ es una función especial definida por partes y cada una de esas partes por
+ polinomios.
+ Que a su vez lo podemos ver como una forma para manejar los problemas de
+ interpolación.
+\end_layout
+
+\begin_layout Standard
+En la sub-campos de la informática de diseño asistido por ordenador y gráficos
+ por ordenador, el término "spline" con más frecuencia se refiere a un polinomio
+ a trozos (paramétrica) curva.
+ Splines son populares en las curvas de estos subcampos debido a la simplicidad
+ de su construcción, su facilidad y precisión de la evaluación, y su capacidad
+ a la aproximación de formas complejas a través de la curva de ajuste de
+ curvas y el diseño interactivo.
+ 
 \end_layout
 
 \begin_layout Section*
