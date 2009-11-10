@@ -28,7 +28,7 @@ como minimizadores de los cambios bruscos en las nubes de puntos.
 Y además se clasifican según su capacidad de alisar las nubes de puntos.
 
 
-\section*{¿ Para que se usa?}
+\section*{¿ Para qué se usa?}
 
 Para el ajuste de curvas, los splines se utilizan para aproximar formas
 complicadas. La simplicidad de la representación y la facilidad de
@@ -132,7 +132,7 @@ $P_2(x) = ax + b$
 
 \subsubsection*{Generalización}
 
-Para cada par de puntos adyancentes hay que resolver el siguiente
+Para cada par de puntos adyacentes hay que resolver el siguiente
 sistema matricial:
 
 $\left[\begin{array}{cc}
@@ -152,12 +152,49 @@ De donde se puede obtener cada uno de los $P_{i}(x)$.
 Un spline cuadrático es aquel que se aproxima a la función tramo por
 tramo, mediante ecuaciones de la forma $P(x)=ax^{2}+bx+c$, esta es
 la razón por la que se llaman cuadráticos pues son polinomios de grado
-2.
+2.\\
+Este tipo de spline se aplica sobre $N+1$ puntos tomando una ecuación
+por cada par de puntos consecutivos, resultando así en $N$ ecuaciones
+cuadráticas.\\
+Se deben cumplir unas condiciones para este tipo de spline: La primera es
+que para cada punto donde termina una ecuación y empieza otra, el valor de
+las ecuaciones debe ser igual.
+Una segunda condición es que, para obtener una curva suave, las derivadas en
+cada punto de esas dos ecuaciones que pasan por él, sean iguales. Para el primer
+punto se toma una segunda derivada de $0$.\\
 
+En los spline cuadráticos cada polinomio tendrá la forma:\\
+\[ P(x) = ax^2 + bx + c \]
+De esa forma se obtienen dos por cada punto. Después de igualar las derivadas
+se llega a tener $N$ ecuaciones de la forma:
+\[ 2a_{i} + b_{i} - 2a_{i+1} + b_{i+1} = 0\]
+Producto de las derivadas $\frac{\partial P}{\partial x} = 2ax + b$ en cada punto.
+Se agregan las dos ecuaciones para el primer y último punto así como la derivada
+hecha $0$ en el primer punto: $a = 0$.
+Esto nos deja con $3N$ ecuaciones que quedan para ser resueltas mediante
+cualquier método de sistemas de ecuaciones.
 
 \subsection*{Cúbicos}
 
-
+Para los spline cúbicos se tiene en cuenta la idea general de los spline
+cuadráticos, donde teniendo una nube de $N+1$ puntos se deben encontrar
+$N$ ecuaciones de tercer grado que una cada pareja de puntos. Estas
+ecuaciones tienen la segunda derivada igual a $0$.
+La primera y segunda derivada debe ser igual en cada par de puntos (desde el
+punto $2$ hasta el $N$).
+ 
+Los spline cúbicos aparecen de la siguiente forma:
+\[ P(x) = ax^3 + bx^2 + cx + d \]
+y para resolver el sistema de ecuaciones final se deben tener $4N$ ecuaciones
+obtenidas de la siguiente forma:\\
+ $2N-2$ ecuaciones de la forma $ P(x) = ax^3 + bx^2 + cx + d $ que unen los puntos internos.\\
+ $2$ ecuaciones para los extremos que son iguales a los valores del primer y último punto.\\
+ $N-1$ ecuaciones que se obtienen después de igualar las derivadas de cada una de las dos
+ ecuaciones que toca cada punto interno.\\
+ $N-1$ ecuaciones iguales a las de la primera derivada pero esta vez con la segunda.\\
+ $2$ ecuaciones más para el primer y último punto en donde las segundas derivadas se hacen iguales a $0$.\\
+ Esto nos da un total de $4N$ ecuaciones que también serán resueltas mediante un método de sistemas de ecuaciones.\\
+ 
 \section*{Splines para curvas cerradas}
 
 
