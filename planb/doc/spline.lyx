@@ -134,6 +134,385 @@ Los splines son también llamados trazadores puesto que su utilidad es: dada
 Lineales
 \end_layout
 
+\begin_layout Standard
+Esta la forma mas simple.
+ Para estos casos lo que se busca es interpolar una función 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$f(x)$
+\end_layout
+
+\end_inset
+
+, con solo 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$N$
+\end_layout
+
+\end_inset
+
+ pares ordenados de la forma 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$(x,f(x))$
+\end_layout
+
+\end_inset
+
+, por los que debe pasar el trazador que obtengamos.
+ Y como bien el nombre nos lo indica cada 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_i(x)$
+\end_layout
+
+\end_inset
+
+ va hacer de la forma 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$ax+b$
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Ahora bien definiremos por cada par de puntos consecutivos en el orden que
+ nos entregaron un 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_i(x)$
+\end_layout
+
+\end_inset
+
+, para un total de 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$N-1$
+\end_layout
+
+\end_inset
+
+ segmentos de recta, haciendo pasar cada una de estas por los puntos que
+ las definen, por lo tanto, la función 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P(x)$
+\end_layout
+
+\end_inset
+
+ será una función por partes definida por el conjunto de los 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_i$
+\end_layout
+
+\end_inset
+
+; es por ello que nuestra función será continua en dichos puntos, pero no
+ derivable en general, por lo que no sera una curva suave, es decir que
+ cumplimos solo con la parte de más trivial de los splines, nos queda por
+ averiguar como es que funcionan los splines que suavizan la conexión entre
+ los diferentes puntos.
+\end_layout
+
+\begin_layout Standard
+Ejemplo : Dado los siguientes pares ordenados halle el spline.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$f(1) = 2$
+\end_layout
+
+\end_inset
+
+
+,
+\lang english
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$f(3) = 1$
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$f(4) = 3$
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ahora bien tenemos 3 puntos por lo tanto necesitamos calcular las 2 ecuaciones
+ de rectas que me unen estos tres puntos.
+\end_layout
+
+\begin_layout Standard
+Tenemos que:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_1(x) = ax + b$
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+→
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_1(1) = 2 = a+b$
+\end_layout
+
+\end_inset
+
+ y 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_1(3) = 1 = 3a +b$ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+→
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$a = -$${1}
+\backslash
+over{2}$
+\end_layout
+
+\end_inset
+
+ y 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$b = $$5
+\backslash
+over2$
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+→
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_1(x) = $${5 - x}
+\backslash
+over{2}$ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/spline_simple_1.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ahora bien esta es la gráfica para 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_1(x)$
+\end_layout
+
+\end_inset
+
+, pero ahora necesitamos calcular la siguiente trama.
+ Para la cual tenemos:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_2(x) = ax + b$
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+→
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_2(3) = 1 = 3a+b$
+\end_layout
+
+\end_inset
+
+ y 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_2(4) = 3 = 4a +b$ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+→
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$a = 2$
+\end_layout
+
+\end_inset
+
+ y 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$b = -5$
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+→
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$P_2(x) = 2x - 5$
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/spline_simple_2.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Generalización
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
 \begin_layout Subsection*
 Cuadráticos
 \end_layout
@@ -146,7 +525,7 @@ Cúbicos
 Splines para curvas cerradas
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsubsection*
 B-spline
 \end_layout
 
