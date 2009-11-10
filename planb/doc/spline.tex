@@ -28,7 +28,7 @@ como minimizadores de los cambios bruscos en las nubes de puntos.
 Y además se clasifican según su capacidad de alisar las nubes de puntos.
 
 
-\section*{¿ Para qué se usa?}
+\section*{¿Para qué se usa?}
 
 Para el ajuste de curvas, los splines se utilizan para aproximar formas
 complicadas. La simplicidad de la representación y la facilidad de
@@ -91,7 +91,7 @@ de recta, haciendo pasar cada una de estas por los puntos que las
 definen, por lo tanto, la función $P(x)$ será una función por partes
 definida por el conjunto de los $P_i$; es por ello que nuestra función
 será continua en dichos puntos, pero no derivable en general, por
-lo que no sera una curva suave, es decir que cumplimos solo con la
+lo que no será una curva suave, es decir que cumplimos solo con la
 parte de más trivial de los splines, nos queda por averiguar como
 es que funcionan los splines que suavizan la conexión entre los diferentes
 puntos.
@@ -203,9 +203,9 @@ A simple impresión los spline cerrados, son tan solo un caso particular
 de los anteriormente mencionados, pero muchos de los algoritmos y/o
 métodos que se utilizan en los splines simples, no se pueden aplicar
 en los splines de este tipo, puesto que un spline cerrado consiste
-que el primer y ultimo punto coinciden, lo que genera un problema
+que el primer y último punto coinciden, lo que genera un problema
 pues casi todos los métodos mencionados de splines se basan en que
-el primer y ultimo punto son difenrentes para poder obtener un sistema
+el primer y último punto son diferentes para poder obtener un sistema
 que no sea linealmente dependiente. Por eso es que vale la pena resaltar
 este caso particular.
 
@@ -216,24 +216,24 @@ Los b-spline a diferencia de los spline no son trazadores puesto que
 no es necesario que pasen por todos los puntos que lo definen, sino
 que puede usar cada uno de esos puntos como un punto de control en
 vez como un punto de una función, por lo cual son curvas mucho más
-suavez (por ejemplo las curvas de Bezier).
+suaves (por ejemplo las curvas de Bézier).
 
-Ahora bien los b-splines se pueden interpretar como splines parametricos
-que se redefinen a partir de un parametro $t\in[0,1]$, expresado
+Ahora bien los b-splines se pueden interpretar como splines paramétricos
+que se redefinen a partir de un parámetro $t\in[0,1]$, expresado
 como combinaciones lineales de los puntos de control, razón de que
 uno de los teoremas fundamentales en este campo exprese: que dada
-una función spline de un grado determinado (ejemplos: lineal,cuadrático,
-cúbico ...), suavidad, y distribución de los puntos, se puede representar
+una función spline de un grado determinado (ejemplos: lineal, cuadrático,
+cúbico... ), suavidad, y distribución de los puntos, se puede representar
 como una combinación lineal de b-splines del mismo grado y suavidad,
 y sobre la misma distribución de los puntos. Es decir que para un
 b-spline existen puntos de anclaje ($P_{0},P_{n-1}$) y puntos de
-control ($P_{1},P_{2},\cdots,P_{n-2}$), y el parametro $t$ que indica
+control ($P_{1},P_{2},\cdots,P_{n-2}$), y el parámetro $t$ que indica
 que el punto que se calcula con ese $t$ esta al $t*100\%$ del punto
 inicial.
 
 Ahora bien utilizaremos el mismo ejemplo de todo el documento para
 explicar como se utiliza un b-spline, haciendo uso del caso particular
-de las curvas de Bezier.
+de las curvas de Bézier.
 
 \[
 B(t)=\sum_{i=0}^{n} {n \choose i } P_{i}\left(1-t\right)^{n-i}t^{i}\]
@@ -248,7 +248,7 @@ B(t)=\sum_{i=0}^{2}{2 \choose i}P_{i}\left(1-t\right)^{2-i}t^{i}=\left(1-t\right
 Con $P_{0}=\left(1,2\right),P_{1}=\left(3,1\right),P_{2}=\left(4,3\right)$
 y para poder visualizar como se comporta el b-spline a medida que
 avanza el $t$ tomaremos $t_{i}=\left\{ 0.2,0.4,0.5,0.6,0.8,1\right\} $,
-para cada intervalo se presentara en la gráfica con un color diferente.
+para cada intervalo se presentará en la gráfica con un color diferente.
 
 \includegraphics[scale=0.7]{img/b-spline_1}
 
@@ -281,8 +281,8 @@ t=1\Rightarrow B(1)=\left(1-1\right)^{2}P_{0}+2*1\left(1-1\right)P_{1}+1^{2}P_{2
 
 
 Obviamente las curvas que se muestran anteriormente se calculan con
-valores de $t$ muchos más pequeños para dar la sensación de continuidad,
-los valores de $t$ era para mostrar como se va construye la gráfica
+valores de $t$ mucho más pequeños para dar la sensación de continuidad,
+los valores de $t$ era para mostrar como se va construyendo la gráfica
 paso a paso.
 
 Ahora bien tranquilamente podemos hacer un spline cerrado si agregamos
@@ -293,12 +293,12 @@ dicho que los dos puntos de anclaje sean el mismo.
 \subsection*{Naturales}
 
 Son un caso muy particular de los splines cúbicos, puesto que la forma
-más típica, consiste en hacer la seguna derivada de $P$ igual a cero
+más típica, consiste en hacer la segunda derivada de $P$ igual a cero
 para el primer y último punto sobre el que está definido el conjunto
 de Splines, pero como el primer y ultimo punto son iguales, entonces
 lo que se hace para manejar esta situación es construir el spline
 superior y luego el spline inferior. Y simplemente garantizar la condición
-en la segunda derivada igual cero en el primer punto en el $n/2$
+en la segunda derivada igual a cero en el primer punto en el $n/2$
 por nombrar el de alguna manera al que se encuentra en la zona de
 frontera entre las particiones de los splines, y luego nuevamente
 garantizar que el spline $n$ que se encuentra en la parte inferior
@@ -320,31 +320,37 @@ del número de puntos, por lo tanto si tenemos alrededor de 100 puntos
 sería manejar flotantes con precisiones del orden de $10^{-100}$
 porque los valores de $t$ que son números entre 0 y 1 serían elevados
 por valores de 0 a 100, por lo tanto son valores inmanejables por
-la aritmetica estandar de un computador.
-\item Coeficientes binomiales: Támbien utilizados en los b-splines son números
+la aritmética estándar de un computador.
+\item Coeficientes binomiales: También utilizados en los b-splines son números
 que después de ${100 \choose i},i\in\left[0,100\right]$, son más grandes
 que $10^{100}$ lo que equivale a $7.352941176470588*10^{89}$ veces
 la edad del universo (trece mil seiscientos millones de años) aproximadamente.
 \end{enumerate}
 La complejidad de los b-splines es relativamente simple es $O(n)$
-si las operaciones intermedías fueran faciles y manejables por los
-números máquinas sería la solución a escoger, pero aun así decidimos
-escojer los splines naturales, que aunque se reducen a manejar matrices
+si las operaciones intermedias fueran fáciles y manejables por los
+números máquinas sería la solución a escoger, pero aún así decidimos
+escoger los splines naturales, que aunque se reducen a manejar matrices
 de tamaños muy grandes son matrices esparcidas que se pueden reducir
 a una configuración muy favorable, que permita atacar el problema
 en $O(n)$ y con números manejables por la aritmética del computador.
 
-Ahora bien podemos concluir que en el campo del análisis númerico,
+Ahora bien podemos concluir que en el campo del análisis numérico,
 un spline es una función especial definida por partes y cada una de
 esas partes por polinomios. Que a su vez lo podemos ver como una forma
 para manejar los problemas de interpolación.
 
-Para la computación, y más especificamente hablando el diseño y gráficos asistido
+Para la computación, y más específicamente hablando el diseño y gráficos asistido
 por computador, con frecuencia se refiere a un polinomio a trozos o
 curva. Como anteriormente lo hemos podido mostrar los splines se caracterizan
 por su simplicidad a la hora de la construcción, su facilidad y precisión de la
 evaluación, y su capacidad a la aproximación de formas complejas a
 través de la curva de ajuste de curvas.
+
+Esta aproximación a los Spline tiene el objetivo de ofrecer una introducción a
+las diferentes formas de trazar líneas o curvas entre puntos, lo cual entrega
+soluciones a una gran variedad de problemas de geometría computacional
+que en la actualidad se encuentra también en áreas de video y animación
+por computador.
 
 
 \section*{Seudocódigo}
@@ -354,4 +360,7 @@ través de la curva de ajuste de curvas.
 
 
 \section*{Implementación }
+
+
+
 \end{document}
