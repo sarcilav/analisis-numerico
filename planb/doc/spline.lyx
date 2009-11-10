@@ -588,8 +588,216 @@ Cúbicos
 Splines para curvas cerradas
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Standard
+A simple impresión los spline cerrados, son tan solo un caso particular
+ de los anteriormente mencionados, pero muchos de los algoritmos y/o métodos
+ que se utilizan en los splines simples, no se pueden aplicar en los splines
+ de este tipo, puesto que un spline cerrado consiste que el primer y ultimo
+ punto coinciden, lo que genera un problema pues casi todos los métodos
+ mencionados de splines se basan en que el primer y ultimo punto son difenrentes
+ para poder obtener un sistema que no sea linealmente dependiente.
+ Por eso es que vale la pena resaltar este caso particular.
+\end_layout
+
+\begin_layout Subsection*
 B-spline
+\end_layout
+
+\begin_layout Standard
+Los b-spline a diferencia de los spline no son trazadores puesto que no
+ es necesario que pasen por todos los puntos que lo definen, sino que puede
+ usar cada uno de esos puntos como un punto de control en vez como un punto
+ de una función, por lo cual son curvas mucho más suavez (por ejemplo las
+ curvas de Bezier).
+\end_layout
+
+\begin_layout Standard
+Ahora bien los b-splines se pueden interpretar como splines parametricos
+ que se redefinen a partir de un parametro 
+\begin_inset Formula $t\in[0,1]$
+\end_inset
+
+, expresado como combinaciones lineales de los puntos de control, razón
+ de que uno de los teoremas fundamentales en este campo exprese: que dada
+ una función spline de un grado determinado (ejemplos: lineal,cuadrático,
+ cúbico ...), suavidad, y distribución de los puntos, se puede representar
+ como una combinación lineal de b-splines del mismo grado y suavidad, y
+ sobre la misma distribución de los puntos.
+ Es decir que para un b-spline existen puntos de anclaje (
+\begin_inset Formula $P_{0},P_{n-1}$
+\end_inset
+
+) y puntos de control (
+\begin_inset Formula $P_{1},P_{2},\cdots,P_{n-2}$
+\end_inset
+
+), y el parametro 
+\begin_inset Formula $t$
+\end_inset
+
+ que indica que el punto que se calcula con ese 
+\begin_inset Formula $t$
+\end_inset
+
+ esta al 
+\begin_inset Formula $t*100\%$
+\end_inset
+
+ del punto inicial.
+\end_layout
+
+\begin_layout Standard
+Ahora bien utilizaremos el mismo ejemplo de todo el documento para explicar
+ como se utiliza un b-spline, haciendo uso del caso particular de las curvas
+ de Bezier.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B(t)=\sum_{i=0}^{n}\binom{n}{i}P_{i}\left(1-t\right)^{n-i}t^{i}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Y para nuestro caso particular de 3 puntos tenemos.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B(t)=\sum_{i=0}^{2}\binom{2}{i}P_{i}\left(1-t\right)^{2-i}t^{i}=\left(1-t\right)^{2}P_{0}+2t\left(1-t\right)P_{1}+t^{2}P_{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Con 
+\begin_inset Formula $P_{0}=\left(1,2\right),P_{1}=\left(3,1\right),P_{2}=\left(4,3\right)$
+\end_inset
+
+ y para poder visualizar como se comporta el b-spline a medida que avanza
+ el 
+\begin_inset Formula $t$
+\end_inset
+
+ tomaremos 
+\begin_inset Formula $t_{i}=\left\{ 0.2,0.4,0.5,0.6,0.8,1\right\} $
+\end_inset
+
+, para cada intervalo se presentara en la gráfica con un color diferente.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_1.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=0.2\Rightarrow B(0.2)=\left(1-0.2\right)^{2}P_{0}+2*0.2\left(1-0.2\right)P_{1}+0.2^{2}P_{2}=\left(1.760;1.720\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_2.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=0.4\Rightarrow B(0.4)=\left(1-0.4\right)^{2}P_{0}+2*0.4\left(1-0.4\right)P_{1}+0.4^{2}P_{2}=\left(2.439;1.680\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_3.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=0.6\Rightarrow B(0.6)=\left(1-0.6\right)^{2}P_{0}+2*0.6\left(1-0.6\right)P_{1}+0.6^{2}P_{2}=\left(3.039;1.880\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_4.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=0.8\Rightarrow B(0.8)=\left(1-0.8\right)^{2}P_{0}+2*0.8\left(1-0.8\right)P_{1}+0.8^{2}P_{2}=\left(3.559;2.319\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/b-spline_5.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+t=1\Rightarrow B(1)=\left(1-1\right)^{2}P_{0}+2*1\left(1-1\right)P_{1}+1^{2}P_{2}=\left(4,3\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Obviamente las curvas que se muestran anteriormente se calculan con valores
+ de 
+\begin_inset Formula $t$
+\end_inset
+
+ muchos más pequeños para dar la sensación de continuidad, los valores de
+ 
+\begin_inset Formula $t$
+\end_inset
+
+ era para mostrar como se va construye la gráfica paso a paso.
 \end_layout
 
 \begin_layout Subsection*
