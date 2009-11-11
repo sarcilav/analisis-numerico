@@ -111,7 +111,7 @@ vector<Cubic> calcular_cubicas(const int & n, const vector<float> & xx) {
 
 
 polygon doit(){
-  int STEPS = 12;
+  int STEPS = 20;
   polygon p ;
   if (x.size() > 2) {
     vector<Cubic> X = calcular_cubicas(x.size()-1, x);
@@ -134,11 +134,12 @@ void draw_spline()
 
   glBegin(GL_LINES);
   {
-    for(int i=0;i<p.X.size();++i)
+    int N = p.X.size();
+    for(int i=0;i<N;++i)
       {
         glVertex2f(p.X[i],p.Y[i]);
+        glVertex2f(p.X[(i+1)%N],p.Y[(i+1)%N]);
       }
-
   }
   glEnd();
 }
