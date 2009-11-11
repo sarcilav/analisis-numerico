@@ -35,15 +35,105 @@ void init()
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
-
 }
+
+
+struct Cubic
+{
+  float a,b,c ,d;
+  Cubic ( ) { }
+  Cubic(float A, float B, float C, float D){
+    a = A;
+    b = B;
+    c = C;
+    d = D;
+  }
+
+
+  /** evaluate cubic */
+  float eval(float u) {
+    return (((d*u) + c)*u + b)*u + a;
+  }
+
+};
+
+
+struct polygon
+{
+  vector <float > X;
+  vector <float > Y;
+  polygon ( ) { }
+  void addPoint ( float xx, float yy)
+  {
+    X.push_back ( xx ) ;
+    Y.push_back ( yy ) ;
+  }
+};
+
+
+vector<Cubic> calcular_cubicas(const int & n, const vector<float> & xx) {
+  float gamma [n+1], delta [n+1], D [n+1];
+  int i;
+  gamma[0] = 1.0f/2.0f;
+  for ( i = 1; i < n; i++) {
+    gamma[i] = 1/(4-gamma[i-1]);
+  }
+  gamma[n] = 1/(2-gamma[n-1]);
+
+  delta[0] = 3*(xx[1]-xx[0])*gamma[0];
+  for ( i = 1; i < n; i++) {
+    delta[i] = (3*(xx[i+1]-xx[i-1])-delta[i-1])*gamma[i];
+  }
+  delta[n] = (3*(xx[n]-xx[n-1])-delta[n-1])*gamma[n];
+
+  D[n] = delta[n];
+  for ( i = n-1; i >= 0; i--) {
+    D[i] = delta[i] - gamma[i]*D[i+1];
+  }
+  vector<Cubic> C (n);
+  for ( i = 0; i < n; i++) {
+    C[i] = Cubic(xx[i], D[i], 3*(xx[i+1] - xx[i]) - 2*D[i] - D[i+1],
+                     2*(xx[i] - xx[i+1]) + D[i] + D[i+1]);
+  }
+  return C;
+}
+polygon doit(){
+  int STEPS = 12;
+  polygon p ;
+  if (x.size() > 2) {
+    vector<Cubic> X = calcular_cubicas(x.size()-1, x);
+    vector<Cubic> Y = calcular_cubicas(y.size()-1, y);
+    p.addPoint(X[0].eval(0),Y[0].eval(0));
+    for (int i = 0; i < X.size(); i++) {
+      for (int j = 1; j <= STEPS; j++) {
+        float u = j / (float) STEPS;
+        p.addPoint(X[i].eval(u),Y[i].eval(u));
+      }
+    }
+  }
+  return p;
+}
+
 
 void draw_spline()
 {
-  glBegin(GL_POLYGON);
+  polygon p = doit();
+  //DEBUG
+  /*
+  for(int i=0;i<p.X.size();++i)
+    {
+      printf("%f %f ; ",p.X[i],p.Y[i]);
+    }
+  puts("");
+  puts("------");
+  */
+  glBegin(GL_LINES);
   {
-    for(int i=0;i<x.size();++i)
-      glVertex2f(x[i],y[i]);
+    for(int i=0;i<p.X.size();++i)
+      {
+        glVertex2f(p.X[i],p.Y[i]);
+      }
+
   }
   glEnd();
 }
@@ -94,8 +184,11 @@ int main(int argc, char** argv)
 
   init();
   glutMouseFunc(mouse_click);
+
   glutDisplayFunc(&display);
+
   glutIdleFunc(display);
+
 
   glutMainLoop();
 
