@@ -2,10 +2,15 @@
  *  Sebastian Arcila Valenzuela
  *  2009
  */
+#ifdef __APPLE__                                                                                                       
+#include<GLUT/GLUT.h>                                                                                                  
+#include<OpenGL/OpenGL.h>                                                                                              
+#else                                                                                                                  
+#include <GL/gl.h>                                                                                                     
+#include <GL/glu.h>                                                                                                    
+#include <GL/glut.h>                                                                                                  
+#endif
 #include <stdlib.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <vector>
