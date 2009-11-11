@@ -7,7 +7,34 @@ splines lineales. Ahora bien entre cada uno de los puntos
 adyacentes construir $recticas$ definidas como pasos sobra la
 curva c\'ubica que brindan los splines c\'ubicos, y al final como determinar
 esos pasos nos lo brinda los b-splines, como par\'ametros,
-para curvas par\'ametricas para $x$ y $y$ respectivamente.
+para curvas par\'ametricas para $x$ y $y$ respectivamente.\\
+Por lo tanto y retomando los criterios para calcular las derivadas de los
+puntos intermedios basta con encontrar soluci\'on al siguente sistema matricial
+para definir las derivadas y posteriormente los polinomios entre estos.\\
+
+$
+\left(\begin{array}{ccccc}
+4 & 1 & \dots &  &1\\
+1 & 4 & 1 & \dots & \\
+  &   & \dots & &\\
+ & \dots & 1 & 4 & 1\\
+1 & &\dots  & 1 & 4
+\end{array}\right)
+\left(\begin{array}{c}
+D_0\\
+D_1\\
+\ldots\\
+D_{n-1}\\
+D_n
+\end{array}\right) =
+\left(\begin{array}{c}
+3(x_1 - x_n)\\
+3(x_2 - x_0)\\
+\ldots\\
+3(x_n - x_{n-2})\\
+3(x_0 - x_{n-1})
+\end{array}\right)
+$
 \begin{verbatim}
 calcular_cubicas(n,  x[])
     w [n+1]
