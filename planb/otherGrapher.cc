@@ -70,33 +70,46 @@ struct polygon
   }
 };
 
-
 vector<Cubic> calcular_cubicas(const int & n, const vector<float> & xx) {
-  float gamma [n+1], delta [n+1], D [n+1];
-  int i;
-  gamma[0] = 1.0f/2.0f;
-  for ( i = 1; i < n; i++) {
-    gamma[i] = 1/(4-gamma[i-1]);
+  float w [n+1], v[n+1], yy[n+1], D [n+1];
+  float z, F, G, H;
+  int k;
+  w[1] = v[1] = z = 1.0f/4.0f;
+  yy[0] = z * 3 * (xx[1] - xx[n]);
+  H = 4;
+  F = 3 * (xx[0] - xx[n-1]);
+  G = 1;
+  for ( k = 1; k < n; k++) {
+    v[k+1] = z = 1/(4 - v[k]);
+    w[k+1] = -z * w[k];
+    yy[k] = z * (3*(xx[k+1]-xx[k-1]) - yy[k-1]);
+    H = H - G * w[k];
+    F = F - G * yy[k-1];
+    G = -v[k] * G;
   }
-  gamma[n] = 1/(2-gamma[n-1]);
+  H = H - (G+1)*(v[n]+w[n]);
+  yy[n] = F - (G+1)*yy[n-1];
 
-  delta[0] = 3*(xx[1]-xx[0])*gamma[0];
-  for ( i = 1; i < n; i++) {
-    delta[i] = (3*(xx[i+1]-xx[i-1])-delta[i-1])*gamma[i];
+  D[n] = yy[n]/H;
+  D[n-1] = yy[n-1] - (v[n]+w[n])*D[n]; /* This equation is WRONG! in my copy of Spath */
+  for ( k = n-2; k >= 0; k--) {
+    D[k] = yy[k] - v[k+1]*D[k+1] - w[k+1]*D[n];
   }
-  delta[n] = (3*(xx[n]-xx[n-1])-delta[n-1])*gamma[n];
 
-  D[n] = delta[n];
-  for ( i = n-1; i >= 0; i--) {
-    D[i] = delta[i] - gamma[i]*D[i+1];
+
+  /* now compute the coefficients of the cubics */
+  vector<Cubic> C (n+1);
+  for ( k = 0; k < n; k++) {
+    C[k] =  Cubic(xx[k], D[k], 3*(xx[k+1] - xx[k]) - 2*D[k] - D[k+1],
+                     2*(xx[k] - xx[k+1]) + D[k] + D[k+1]);
   }
-  vector<Cubic> C (n);
-  for ( i = 0; i < n; i++) {
-    C[i] = Cubic(xx[i], D[i], 3*(xx[i+1] - xx[i]) - 2*D[i] - D[i+1],
-                     2*(xx[i] - xx[i+1]) + D[i] + D[i+1]);
-  }
+
+  C[n] = Cubic(xx[n], D[n], 3*(xx[0] - xx[n]) - 2*D[n] - D[0],
+               2*(xx[n] - xx[0]) + D[n] + D[0]);
   return C;
 }
+
+
 polygon doit(){
   int STEPS = 12;
   polygon p ;
@@ -118,15 +131,7 @@ polygon doit(){
 void draw_spline()
 {
   polygon p = doit();
-  //DEBUG
-  /*
-  for(int i=0;i<p.X.size();++i)
-    {
-      printf("%f %f ; ",p.X[i],p.Y[i]);
-    }
-  puts("");
-  puts("------");
-  */
+
   glBegin(GL_LINES);
   {
     for(int i=0;i<p.X.size();++i)
@@ -161,7 +166,7 @@ void display()
 }
 void mouse_click(int button, int state, int X, int Y)
 {
-  if(button == GLUT_LEFT_BUTTON)
+  if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN  )
     {
 
       Y = 300 - Y -1;

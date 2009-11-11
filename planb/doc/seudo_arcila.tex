@@ -10,52 +10,59 @@ esos pasos nos lo brinda los b-splines, como par\'ametros,
 para curvas par\'ametricas para $x$ y $y$ respectivamente.
 \begin{verbatim}
 calcular_cubicas(n,  x[])
-    gamma [n+1]
-    delta [n+1]
+    w [n+1]
+    v [n+1]
+    y [n+1]
     D [n+1]
-    i;
-    /* Este es el sistema de matriz banda que
-       tenemos que solucionar para obtener las
-       derivadas
-       [2 1       ] [D[0]]   [3(x[1] - x[0])  ]
+    z, F, G, H
+    k
+    /* Hay que resolver el siguiente sistema
+       [4 1      1] [D[0]]   [3(x[1] - x[n])  ]
        |1 4 1     | |D[1]|   |3(x[2] - x[0])  |
        |  1 4 1   | | .  | = |      .         |
        |    ..... | | .  |   |      .         |
        |     1 4 1| | .  |   |3(x[n] - x[n-2])|
-       [       1 2] [D[n]]   [3(x[n] - x[n-1])]
-       usando operaciones elementales filas
-       podemos convertir la matriz a una superior
-       triangular, y simplemente usar sustitucion regresiva.
-       Luego D[i] es son las derivadas en los puntos intermedios
+       [1      1 4] [D[n]]   [3(x[0] - x[n-1])]
+
+       Descomponiendo las matrices:
+        -- En triangular superior
+        -- Triangular inferior
+       Y con una sustitucion regresiva.
+       Obtenmos D que son las derivadas
+       de los puntos internos.
        */
-
-    gamma[0] = 1.0f/2.0f
-    for ( i = 1; i < n; i++)
-      gamma[i] = 1/(4-gamma[i-1])
+    w[1] = v[1] = z = 1.0f/4.0f
+    y[0] = z * 3 * (x[1] - x[n])
+    H = 4
+    F = 3 * (x[0] - x[n-1])
+    G = 1
+    for ( k = 1; k < n; k++)
+      v[k+1] = z = 1/(4 - v[k])
+      w[k+1] = -z * w[k]
+      y[k] = z * (3*(x[k+1]-x[k-1]) - y[k-1])
+      H = H - G * w[k]
+      F = F - G * y[k-1]
+      G = -v[k] * G
     endfor
-    gamma[n] = 1/(2-gamma[n-1])
+    H = H - (G+1)*(v[n]+w[n])
+    y[n] = F - (G+1)*y[n-1]
 
-    delta[0] = 3*(x[1]-x[0])*gamma[0]
-    for ( i = 1; i < n; i++)
-      delta[i] = (3*(x[i+1]-x[i-1])-delta[i-1])*gamma[i]
+    D[n] = y[n]/H
+    D[n-1] = y[n-1] - (v[n]+w[n])*D[n]
+    for ( k = n-2; k >= 0; k--)
+      D[k] = y[k] - v[k+1]*D[k+1] - w[k+1]*D[n]
+    enfor
+    Cubic C [n+1] /*Cubic es una clase o estructura para manejar las ecuaciones
+     cubicas
+    */
+    for ( k = 0; k < n; k++)
+      C[k] (float)x[k], D[k], 3*(x[k+1] - x[k]) - 2*D[k] - D[k+1],
+                       2*(x[k] - x[k+1]) + D[k] + D[k+1])
     endfor
-    delta[n] = (3*(x[n]-x[n-1])-delta[n-1])*gamma[n]
-
-    D[n] = delta[n]
-    for ( i = n-1; i >= 0; i--)
-      D[i] = delta[i] - gamma[i]*D[i+1]
-    endfor
-
-    /* Ahora calculamos los coeficientes de cubicos y los guardamos en
-      en Cubic[i]*/
-    Cubic C [] /*Cubic es una clase o estructura que contienen los coeficientes cubicos */
-    for ( i = 0; i < n; i++)
-      C[i] = Cubic(x[i], D[i], 3*(x[i+1] - x[i]) - 2*D[i] - D[i+1],
-                       2*(x[i] - x[i+1]) + D[i] + D[i+1])
-      /*Cubic(d,c,b,a) para ax^3 + bx^2 + cx +d*/
-    endfor
+    C[n] Cubic((float)x[n], D[n], 3*(x[0] - x[n]) - 2*D[n] - D[0],
+                     2*(x[n] - x[0]) + D[n] + D[0])
     return C
-  }
+
 \end{verbatim}
 Este c\'odigo que mostramos anteriormente nos sirve para obtener las curvas c\'ubicas
 par\'ametricas, de tal forma que $f_x(t) = at^3+bt^2+ct+d$ y $f_y(t) = et^3+ft^2+gt+h$.

@@ -27,76 +27,92 @@ using namespace std;
 #define D_v(x) for(int i=0;i<x.size();cerr<<x[i++]<<" ")
 
 #define ALL(x) x.begin(),x.end()
-
-
 struct Cubic
 {
-
-  float a,b,c,d;         /* d + c*x + b*x^2 +a*x^3 */
-  Cubic(){}
-  Cubic(float d, float c, float b, float a)
-  {
-    this.a = a;
-    this.b = b;
-    this.c = c;
-    this.d = d;
+  float a,b,c ,d;
+  Cubic ( ) { }
+  Cubic(float A, float B, float C, float D){
+    a = A;
+    b = B;
+    c = C;
+    d = D;
   }
 
 
   /** evaluate cubic */
-  float eval(float u)
-  {
-    return (((a*u) + b)*u + c)*u + d;
+  float eval(float u) {
+    return (((d*u) + c)*u + b)*u + a;
   }
-};
-vector<Cubic> calcular_cubicas(const int &n, const vector<float> &x)
-{
-  float gamma [n+1],delta [n+1], D [n+1];
 
-  int i;
-  gamma[0] = 1.0f/2.0f;
-  for ( i = 1; i < n; ++i)
-    gamma[i] = 1/(4-gamma[i-1]);
-  gamma[n] = 1/(2-gamma[n-1]);
-  delta[0] = 3*(x[1]-x[0])*gamma[0];
-  for ( i = 1; i < n; ++i)
-    delta[i] = (3*(x[i+1]-x[i-1])-delta[i-1])*gamma[i];
-  delta[n] = (3*(x[n]-x[n-1])-delta[n-1])*gamma[n];
-  D[n] = delta[n];
-  for ( i = n-1; i >= 0; --i)
-    D[i] = delta[i] - gamma[i]*D[i+1];
-  vector<Cubic> C(n);
-  for ( i = 0; i < n; i++)
-    C[i] =  Cubic((float)x[i], D[i], 3*(x[i+1] - x[i]) - 2*D[i] - D[i+1],
-                  2*(x[i] - x[i+1]) + D[i] + D[i+1]);
-  return C;
-}
+};
+
+
 struct polygon
 {
-  int size;
-  vector<float> X;
-  vector<float> Y;
-  polygon(){}
-  void addPoint(float x,float y)
+  vector <float > X;
+  vector <float > Y;
+  polygon ( ) { }
+  void addPoint ( float xx, float yy)
   {
-    ++size;
-    X.push_back(x);
-    Y.push_back(y);
+    X.push_back ( xx ) ;
+    Y.push_back ( yy ) ;
   }
 };
-polygon spline(const polygon & ini)
-{
-  int STEPS = 12;
-  vector<Cubic> X = calcular_cubicas(ini.size, ini.X);
-  vector<Cubic> Y = calcular_cubicas(ini.size, ini.Y);
 
-  polygon p;
-  p.addPoint(X[0].eval(0),Y[0].eval(0));
-  for (int i = 0; i < X.size(); ++i)
-    for (int j = 1; j <= STEPS; ++j)
-      {
+vector<Cubic> calcular_cubicas(const int & n, const vector<float> & xx) {
+  float w [n+1], v[n+1], yy[n+1], D [n+1];
+  float z, F, G, H;
+  int k;
+  w[1] = v[1] = z = 1.0f/4.0f;
+  yy[0] = z * 3 * (xx[1] - xx[n]);
+  H = 4;
+  F = 3 * (xx[0] - xx[n-1]);
+  G = 1;
+  for ( k = 1; k < n; k++) {
+    v[k+1] = z = 1/(4 - v[k]);
+    w[k+1] = -z * w[k];
+    yy[k] = z * (3*(xx[k+1]-xx[k-1]) - yy[k-1]);
+    H = H - G * w[k];
+    F = F - G * yy[k-1];
+    G = -v[k] * G;
+  }
+  H = H - (G+1)*(v[n]+w[n]);
+  yy[n] = F - (G+1)*yy[n-1];
+
+  D[n] = yy[n]/H;
+  D[n-1] = yy[n-1] - (v[n]+w[n])*D[n];
+  for ( k = n-2; k >= 0; k--) {
+    D[k] = yy[k] - v[k+1]*D[k+1] - w[k+1]*D[n];
+  }
+
+
+  /* now compute the coefficients of the cubics */
+  vector<Cubic> C (n+1);
+  for ( k = 0; k < n; k++) {
+    C[k] =  Cubic(xx[k], D[k], 3*(xx[k+1] - xx[k]) - 2*D[k] - D[k+1],
+                     2*(xx[k] - xx[k+1]) + D[k] + D[k+1]);
+  }
+
+  C[n] = Cubic(xx[n], D[n], 3*(xx[0] - xx[n]) - 2*D[n] - D[0],
+               2*(xx[n] - xx[0]) + D[n] + D[0]);
+  return C;
+}
+
+
+polygon doit(){
+  int STEPS = 12;
+  polygon p ;
+  if (x.size() > 2) {
+    vector<Cubic> X = calcular_cubicas(x.size()-1, x);
+    vector<Cubic> Y = calcular_cubicas(y.size()-1, y);
+    p.addPoint(X[0].eval(0),Y[0].eval(0));
+    for (int i = 0; i < X.size(); i++) {
+      for (int j = 1; j <= STEPS; j++) {
         float u = j / (float) STEPS;
-        p.addPoint(X[i].eval(u), Y[i].eval(u));
+        p.addPoint(X[i].eval(u),Y[i].eval(u));
       }
+    }
+  }
   return p;
 }
+
